@@ -791,19 +791,6 @@ public class SQLiteDatabaseTest {
     }
 
     @Test
-    public void testRawQueryWithCommonTableExpression() {
-        try(Cursor cursor = database.rawQuery("WITH RECURSIVE\n" +
-                "  cnt(x) AS (VALUES(1) UNION ALL SELECT x+1 FROM cnt WHERE x<100)\n" +
-                "SELECT COUNT(*) FROM cnt;", null)) {
-            assertThat(cursor).isNotNull();
-            assertThat(cursor.moveToNext()).isTrue();
-            assertThat(cursor.getCount()).isEqualTo(1);
-            assertThat(cursor.isNull(0)).isFalse();
-            assertThat(cursor.getLong(0)).isEqualTo(100);
-        }
-    }
-
-    @Test
     public void shouldThrowWhenForeignKeysConstraintIsViolated() {
         database.execSQL("CREATE TABLE master (master_value INTEGER)");
         database.execSQL("CREATE TABLE slave (master_value INTEGER REFERENCES"
